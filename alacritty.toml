@@ -539,6 +539,8 @@ hide_when_typing = false
 # binding = { key = "<string>", mods = "<string>", mode = "<string>" }
 # See keyboard.bindings for documentation on available values.
 # This controls which key binding is used to start the keyboard hint selection process.
+key_bindings:
+  - { key: F11, action: ToggleFullscreen}
 
 # mouse = { mods = "<string>", enabled = true | false }
 # See keyboard.bindings for documentation on available mods.
