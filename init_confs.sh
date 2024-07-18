@@ -50,8 +50,8 @@ function place_config() {
 }
 
 # Place configuration files
-place_config "tmux.conf" "$HOME_DIR/.tmux.conf"
-place_config "alacritty.toml" "$HOME_DIR/.config/alacritty/alacritty.toml"
+place_config "tmux/tmux.conf" "$HOME_DIR/.tmux.conf"
+place_config "alacritty.yml" "$HOME_DIR/.config/alacritty/alacritty.yml"
 place_config "nvim" "$HOME_DIR/.config/nvim"
 
 exit 0
