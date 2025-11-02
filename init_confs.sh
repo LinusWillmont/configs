@@ -54,5 +54,6 @@ place_config "tmux/tmux.conf" "$HOME_DIR/.tmux.conf"
 place_config "alacritty.toml" "$HOME_DIR/.config/alacritty/alacritty.toml"
 place_config "nvim" "$HOME_DIR/.config/nvim"
 place_config "wezterm.lua" "$HOME_DIR/.wezterm.lua"
+place_config "bash/bash_aliases" "$HOME_DIR/.bash_aliases"
 
 exit 0
