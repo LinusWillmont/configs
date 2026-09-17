@@ -1,4 +1,30 @@
 alias gs="git status"
 alias gl="git log --oneline --graph"
 alias ga="git add"
-alias ls="ls -la"
+alias ll='ls -al --color=auto'
+alias ls='ls --color=auto'
+
+# Delete local branches that have been merged into the current branch
+# (skips main/master/develop and the current branch). Use -n for a dry run.
+gprune() {
+    local dry_run=false
+    [[ "$1" == "-n" || "$1" == "--dry-run" ]] && dry_run=true
+
+    git pull --prune || return 1
+
+    local branches
+    branches=$(git branch --merged | grep -vE '^\*|^\+|\b(main|master|develop)$' | sed 's/^[ ]*//')
+
+    if [[ -z "$branches" ]]; then
+        echo "No merged branches to prune."
+        return 0
+    fi
+
+    if $dry_run; then
+        echo "Would delete:"
+        echo "$branches" | sed 's/^/  /'
+        return 0
+    fi
+
+    echo "$branches" | xargs -r git branch -d
+}

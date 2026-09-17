@@ -1,0 +1,10 @@
+# Prompt: user@host full-path (git-branch) [kube-ctx] $
+# __kube_ps1 lives in bash_kube (prod = red).
+if [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]; then
+  . /usr/share/git-core/contrib/completion/git-prompt.sh
+  GIT_PS1_SHOWDIRTYSTATE=1
+  GIT_PS1_SHOWUNTRACKEDFILES=1
+  PS1='\[\e[32m\]\u@\h\[\e[0m\] \[\e[34m\]\w\[\e[0m\]\[\e[33m\]$(__git_ps1 " (%s)")\[\e[0m\]$(__kube_ps1) \$ '
+else
+  PS1='\[\e[32m\]\u@\h\[\e[0m\] \[\e[34m\]\w\[\e[0m\]$(__kube_ps1) \$ '
+fi

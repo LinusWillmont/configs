@@ -4,7 +4,7 @@ One place to rule them all
 * tmux
 * Ghostty
 * Neovim (kickstart.nvim)
-* bash aliases
+* bash aliases / prompt / kube context switcher (kctx)
 
 Theme: Catppuccin Mocha (terminal + Neovim), JetBrainsMono Nerd Font.
 

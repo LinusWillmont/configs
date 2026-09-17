@@ -1,0 +1,47 @@
+# Kubernetes: context switcher + prompt segment
+# kctx            -> list contexts
+# kctx dev|prod   -> switch context (kubectl config use-context)
+kctx() {
+  if [ $# -eq 0 ]; then
+    kubectl config get-contexts
+  else
+    kubectl config use-context "$1"
+  fi
+}
+complete -W "dev prod" kctx
+
+# ksn <ns>  -> set namespace on current context
+# ksnr      -> clear namespace (back to all / default)
+ksn() {
+  [ -n "$1" ] || { echo "usage: ksn <namespace>" >&2; return 1; }
+  kubectl config set-context --current --namespace="$1" >/dev/null
+}
+_ksn_complete() {
+  COMPREPLY=($(compgen -W "$(kubectl get ns -o name 2>/dev/null | cut -d/ -f2)" -- "${COMP_WORDS[COMP_CWORD]}"))
+}
+complete -F _ksn_complete ksn
+ksnr() {
+  kubectl config unset "contexts.$(kubectl config current-context).namespace" >/dev/null
+}
+
+# Cheap current-context lookup (no kubectl exec on every prompt).
+__kube_ps1() {
+  local cfg="${KUBECONFIG%%:*}"
+  cfg="${cfg:-$HOME/.kube/config}"
+  [ -r "$cfg" ] || return
+  local ctx ns label
+  ctx=$(sed -n 's/^current-context: *//p' "$cfg")
+  [ -n "$ctx" ] || return
+  # namespace of the current context (awk over the contexts: block)
+  ns=$(awk -v ctx="$ctx" '
+    /^- context:/        { ns="" }
+    /^    namespace: /   { ns=$2 }
+    /^  name: /          { if ($2==ctx) { print ns; exit } }
+  ' "$cfg")
+  label="$ctx"; [ -n "$ns" ] && label="$ctx | $ns"
+  case "$ctx" in
+    prod*) printf ' \001\e[1;31m\002[%s]\001\e[0m\002' "$label" ;;   # red bold
+    dev*)  printf ' \001\e[36m\002[%s]\001\e[0m\002' "$label" ;;     # cyan
+    *)     printf ' \001\e[35m\002[%s]\001\e[0m\002' "$label" ;;     # magenta
+  esac
+}

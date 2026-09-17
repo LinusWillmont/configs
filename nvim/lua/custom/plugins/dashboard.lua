@@ -1,7 +1,8 @@
--- A pretty start screen, replacing Neovim's default intro splash.
--- Only the `dashboard` module of snacks.nvim is enabled here; the rest of the
--- kickstart setup (telescope, neo-tree, ...) is left untouched and is what the
--- menu entries below drive.
+-- A pretty start screen, replacing Neovim's default intro splash, plus a
+-- floating lazygit window (<leader>gg). Only the `dashboard` and `lazygit`
+-- modules of snacks.nvim are enabled here; the rest of the kickstart setup
+-- (telescope, neo-tree, ...) is left untouched and is what the menu entries
+-- below drive.
 
 ---@module 'lazy'
 ---@type LazySpec
@@ -9,9 +10,15 @@ return {
   'folke/snacks.nvim',
   priority = 1000,
   lazy = false,
+  keys = {
+    { '<leader>gg', function() Snacks.lazygit() end, desc = 'Lazy[G]it' },
+    { '<leader>gl', function() Snacks.lazygit.log() end, desc = '[G]it [L]og (lazygit)' },
+    { '<leader>gf', function() Snacks.lazygit.log_file() end, desc = '[G]it log current [F]ile' },
+  },
   ---@module 'snacks'
   ---@type snacks.Config
   opts = {
+    lazygit = { enabled = true },
     dashboard = {
       enabled = true,
       preset = {
@@ -30,6 +37,7 @@ return {
           { icon = ' ', key = 'g', desc = 'Find Text', action = ':Telescope live_grep' },
           { icon = ' ', key = 'r', desc = 'Recent Files', action = ':Telescope oldfiles' },
           { icon = ' ', key = 'e', desc = 'File Explorer', action = ':Neotree toggle reveal left' },
+          { icon = ' ', key = 'G', desc = 'Lazygit', action = function() Snacks.lazygit() end },
           { icon = ' ', key = 'c', desc = 'Config', action = ':Telescope find_files cwd=' .. vim.fn.stdpath 'config' },
           { icon = '󰒲 ', key = 'l', desc = 'Lazy', action = ':Lazy' },
           { icon = ' ', key = 'q', desc = 'Quit', action = ':qa' },
